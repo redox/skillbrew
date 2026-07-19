@@ -1,0 +1,185 @@
+version: 1
+skills:
+  babysit-ci:
+    source_repository: https://github.com/cursor/plugins.git
+    source_path: cursor-team-kit/skills/loop-on-ci
+    source_ref: 3fe2823ce17c1656c222d4b7c59d3f82fbf20143
+    source_tree_sha256: 965fc684c1a6a29c076453e7f232a0aed1636530fb870a5bfc64bfd44aa8d748
+    source_name: loop-on-ci
+    license: MIT
+    output_sha256: fdce1b51e21370360659931bb5c9f7277ebaa531683939887af2f9646545f875
+    generated_at: 2026-07-19T09:02:31.765Z
+  brainstorming:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/brainstorming
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: 25249399f2cd5f81631986f9ccb31b0b14e1fc568b954f0b98f3e7d08529da05
+    license: MIT
+    prompt_sha256: e91f6c713182395a1c47701d541cf028ca1f4e402664194b08280be7079ac967
+    transformer: cursor-sdk-1.0.23/composer-2
+    previous_output_sha256: c69e9c2ff85504e4b13e76e8be5ed239408f08fda62942396381111c10fcd3f2
+    output_sha256: 73b58c6e4e4f54a02dd5d72741f332577badf4946cfb6cd0748029d59fd43445
+    generated_at: 2026-07-19T09:41:22.349Z
+  code-simplifier:
+    source_repository: https://github.com/anthropics/claude-plugins-official.git
+    source_path: plugins/code-simplifier/agents/code-simplifier.md
+    source_ref: e09c3b1e5f6e8edbe2cdaf55b5dc38cf87824389
+    source_tree_sha256: 0f9f7dbf92111ac545793d7e205aed77b61ec4bcbcab0ff49c0ffa4a761d01c2
+    license: Apache-2.0
+    output_sha256: 0f9f7dbf92111ac545793d7e205aed77b61ec4bcbcab0ff49c0ffa4a761d01c2
+    generated_at: 2026-07-19T09:58:38.275Z
+  deslop:
+    source_repository: https://github.com/cursor/plugins.git
+    source_path: cursor-team-kit/skills/deslop
+    source_ref: 3fe2823ce17c1656c222d4b7c59d3f82fbf20143
+    source_tree_sha256: d97fcd52de8ebda18b2899e09becea206dcb010757fdfa75ab611731fdd206e6
+    license: MIT
+    output_sha256: d97fcd52de8ebda18b2899e09becea206dcb010757fdfa75ab611731fdd206e6
+    generated_at: 2026-07-19T08:37:32.775Z
+  dispatching-parallel-agents:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/dispatching-parallel-agents
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: 1b12f885aa7569360172bf6a60530f77e4a3e9122df062fcce4d4c124e44d848
+    license: MIT
+    output_sha256: 1b12f885aa7569360172bf6a60530f77e4a3e9122df062fcce4d4c124e44d848
+    generated_at: 2026-07-19T08:37:27.848Z
+  executing-plans:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/executing-plans
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: 8d3cbe09d5906ee2073f4238329e97fab2a9fc8f558e0f79ecba6039ebe94ceb
+    license: MIT
+    prompt_sha256: 60b5b95c396a293d5bc37f27eea274ad56d93d5963cfefb1d429f1aa9a4f4f94
+    transformer: cursor-sdk-1.0.23/composer-2
+    previous_output_sha256: 216cfac5d50a4c9d90b0fdeb4c31846f4afa7e9109d35322bec83cf45592fcb1
+    output_sha256: 7bbecdd61fddb110210f52f28aa62ed1264ffc8593502e8e01c3694e129283d1
+    generated_at: 2026-07-19T09:41:48.473Z
+  fix-ci:
+    source_repository: https://github.com/cursor/plugins.git
+    source_path: cursor-team-kit/skills/fix-ci
+    source_ref: 3fe2823ce17c1656c222d4b7c59d3f82fbf20143
+    source_tree_sha256: f6ed4de31f5f5fd7ab798a01c64cd2eee021a6b5d0c3f01ee9a1dc147b36eaae
+    license: MIT
+    output_sha256: f6ed4de31f5f5fd7ab798a01c64cd2eee021a6b5d0c3f01ee9a1dc147b36eaae
+    generated_at: 2026-07-19T08:37:33.557Z
+  get-pr-comments:
+    source_repository: https://github.com/cursor/plugins.git
+    source_path: cursor-team-kit/skills/get-pr-comments
+    source_ref: 3fe2823ce17c1656c222d4b7c59d3f82fbf20143
+    source_tree_sha256: b4dd799a3b6d6578ba800192dd12f2cb3943fde9cd7546478a438dc873428d2f
+    license: MIT
+    output_sha256: b4dd799a3b6d6578ba800192dd12f2cb3943fde9cd7546478a438dc873428d2f
+    generated_at: 2026-07-19T08:37:34.348Z
+  grill-me:
+    source_repository: https://github.com/mattpocock/skills.git
+    source_path: skills/productivity/grill-me
+    source_ref: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
+    source_tree_sha256: 0322b99abe131e6ddf1649c8b6656b92d71eefdb23d0640e47bd6bbeae9aedfa
+    license: MIT
+    prompt_sha256: a576f9a64162b969184d398d71f76d95543a8ea8970f3cbce815fa363b67c433
+    transformer: codex-cli-0.144.6
+    previous_output_sha256: 0322b99abe131e6ddf1649c8b6656b92d71eefdb23d0640e47bd6bbeae9aedfa
+    output_sha256: ebd2ab1ce8b0da84e35691e7b7098567f8d2b538c3ef586b5090b4de69369e17
+    generated_at: 2026-07-19T08:41:43.485Z
+  grilling:
+    source_repository: https://github.com/mattpocock/skills.git
+    source_path: skills/productivity/grilling
+    source_ref: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
+    source_tree_sha256: a99efebe9a265e1f5fafcd5fce8e0992f9198ef4564e9ff6ff2fb0ecd2729535
+    license: MIT
+    output_sha256: a99efebe9a265e1f5fafcd5fce8e0992f9198ef4564e9ff6ff2fb0ecd2729535
+    generated_at: 2026-07-19T08:40:37.295Z
+  improve:
+    source_repository: https://github.com/shadcn/improve.git
+    source_path: skills/improve
+    source_ref: 03369ee6d7cafbfcecc4346539b05b3dc0a603bb
+    source_tree_sha256: 2ce88320795cc851fb523838bbb0a04e80f751a543cd723211d42745fb305c38
+    license: MIT
+    prompt_sha256: 57af1223533b0d09f405d0e959e879b384d57455a53a84e18ac4419bb4c298e0
+    transformer: cursor-sdk-1.0.23/composer-2
+    previous_output_sha256: 2ce88320795cc851fb523838bbb0a04e80f751a543cd723211d42745fb305c38
+    output_sha256: 98bed1a7505cba5df6a65d34a4fb1f7090f972e8f022010e03c9a1751d7d651b
+    generated_at: 2026-07-19T09:19:22.328Z
+  receiving-code-review:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/receiving-code-review
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: f638da1f8541565fd3117a5b7149f48124c2032c0a549bb18dbbb362d3ab6046
+    license: MIT
+    output_sha256: f638da1f8541565fd3117a5b7149f48124c2032c0a549bb18dbbb362d3ab6046
+    generated_at: 2026-07-19T08:37:29.286Z
+  requesting-code-review:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/requesting-code-review
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: a478d78a3ebb8872c0d34f32823cc62566178d5fe1330e277a17ce2648ac2212
+    license: MIT
+    prompt_sha256: 5d356e6d41acbcdeb71c2df82660672ef0b02d84bdc87180e213df1dec399050
+    transformer: cursor-sdk-1.0.23/composer-2
+    previous_output_sha256: a478d78a3ebb8872c0d34f32823cc62566178d5fe1330e277a17ce2648ac2212
+    output_sha256: dd47652fec36cfd6fe50b653f886a01557d0ad5f5e102803b410730300b1d4fd
+    generated_at: 2026-07-19T09:18:25.748Z
+  subagent-driven-development:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/subagent-driven-development
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: bb9cb740f06af649db2f21bc25dce1368f1e88f6bb696104f637509b3ec9e816
+    license: MIT
+    prompt_sha256: 1ea7766b0de13ff587b574fc45afadc112c3dc2e1706f4d354e884f0c149b7c4
+    transformer: cursor-sdk-1.0.23/composer-2
+    previous_output_sha256: 87522fff7d26ae2e14d4ad580ed2ed54a49563490c97558b843ed066689c96a3
+    output_sha256: 04bb91391d46d8c9dda8b7e997717df1a4e8f2bdd27f77fc753c900bde8564e7
+    generated_at: 2026-07-19T09:32:03.717Z
+  systematic-debugging:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/systematic-debugging
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: 9aa96957ab9081d0267b731cad56031b6a501f29c6fa0ea6b669d906619c5e9a
+    license: MIT
+    prompt_sha256: bfcf3de140b44b6d93a5319f74276ac228b1ea304bc825e2af5d3bbf2a004e19
+    transformer: manual-bootstrap
+    previous_output_sha256: 9aa96957ab9081d0267b731cad56031b6a501f29c6fa0ea6b669d906619c5e9a
+    output_sha256: b213f3f63249c924d0729bfb9f5124a59ddcd6d4a973004cd05a07c32d2f52be
+    generated_at: 2026-07-19T09:04:35.364Z
+  test-driven-development:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/test-driven-development
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: 7eb29b11ea3380fd775f2e9b781a4e4667837887af52cec01c6eeafd03183f83
+    license: MIT
+    output_sha256: 7eb29b11ea3380fd775f2e9b781a4e4667837887af52cec01c6eeafd03183f83
+    generated_at: 2026-07-19T08:37:31.374Z
+  thermo-nuclear-code-quality-review:
+    source_repository: https://github.com/cursor/plugins.git
+    source_path: thermos/skills/thermo-nuclear-code-quality-review
+    source_ref: 3fe2823ce17c1656c222d4b7c59d3f82fbf20143
+    source_tree_sha256: 73de8f84de7f219c8fa3b531d69127fcc592803aa6af6e9fb8db12a230b374b4
+    license: MIT
+    prompt_sha256: a576f9a64162b969184d398d71f76d95543a8ea8970f3cbce815fa363b67c433
+    transformer: codex-cli-0.144.6
+    previous_output_sha256: 73de8f84de7f219c8fa3b531d69127fcc592803aa6af6e9fb8db12a230b374b4
+    output_sha256: 630d0cd29cd0e212127e40e4b3064f02fe631efddaa12f060d9d0e541dc9ba22
+    generated_at: 2026-07-19T08:42:17.872Z
+  thermo-nuclear-review:
+    source_repository: https://github.com/cursor/plugins.git
+    source_path: thermos/skills/thermo-nuclear-review
+    source_ref: 3fe2823ce17c1656c222d4b7c59d3f82fbf20143
+    source_tree_sha256: 81ee4d999ff99782296cc5c68e96af424beff52c566e0d9b36fd7af5d5f3d4ea
+    license: MIT
+    prompt_sha256: a576f9a64162b969184d398d71f76d95543a8ea8970f3cbce815fa363b67c433
+    transformer: codex-cli-0.144.6
+    previous_output_sha256: 81ee4d999ff99782296cc5c68e96af424beff52c566e0d9b36fd7af5d5f3d4ea
+    output_sha256: 584bb8b3bf825b698416d9c8088df39457e2c89bc8c76dd98b0e6526fe5b3a8c
+    generated_at: 2026-07-19T08:42:50.043Z
+  writing-plans:
+    source_repository: https://github.com/obra/superpowers.git
+    source_path: skills/writing-plans
+    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+    source_tree_sha256: 0201bad99c83ba8377b7ede5e81e9f7ee213495d4b842afac0741f31ea1e54cb
+    license: MIT
+    prompt_sha256: 3bf032f69075da505f9b925115c29b4f6e9b7ea94c56d9d216a680f3d1f2dae2
+    transformer: cursor-sdk-1.0.23/composer-2
+    previous_output_sha256: fc9d88ded81b39d6d851ff071fcef5248543ababf235d2327cdd6fc03bc67348
+    output_sha256: fde1a776fa9529c30ddbb6be689ea3ba15f99ea1ec7fee41463d9c4eef2dc032
+    generated_at: 2026-07-19T09:33:04.557Z

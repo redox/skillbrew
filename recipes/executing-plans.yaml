@@ -1,0 +1,36 @@
+name: executing-plans
+source:
+  repository: https://github.com/obra/superpowers.git
+  path: skills/executing-plans
+  ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Adapt this skill to execute the host agent's active built-in plan.
+
+      - Do not require, create, save, or commit a plan Markdown file.
+      - Read tasks and constraints from the active built-in plan; if the user
+        supplied requirements in chat, use those directly.
+      - Preserve plan review, clarification, batched execution, checkpoints,
+        testing, and a clear completion report.
+      - Remove the `finishing-a-development-branch` dependency entirely.
+        Never invoke, recommend, or require that skill. Once every task is
+        verified, summarize the work and hand control back to the user.
+      - Remove every reference to `finishing-a-development-branch` from the
+        process, examples, and integration list.
+      - Remove the `using-git-worktrees` dependency entirely. Never invoke,
+        recommend, or require that skill. Execute in the workspace supplied by
+        the host agent and do not add a replacement worktree-setup workflow.
+      - Remove every reference to `using-git-worktrees` from the process,
+        preconditions, examples, and integration list.
+      - Remove references to `../using-superpowers/references/` and any other
+        platform reference files that are not bundled with this skill. Keep
+        useful subagent guidance self-contained in `SKILL.md`.
+      - Keep compatibility with the adapted `writing-plans` skill without
+        assuming it wrote a file.
+      - Remove examples and handoffs that rely on `docs/superpowers/plans/`.
+      - Avoid unrelated stylistic rewrites.
+    mode: semantic-rebase
+    allowed_paths: [ SKILL.md ]

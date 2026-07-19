@@ -1,0 +1,7 @@
+name: code-simplifier
+source:
+  repository: https://github.com/anthropics/claude-plugins-official.git
+  path: plugins/code-simplifier/agents/code-simplifier.md
+  ref: e09c3b1e5f6e8edbe2cdaf55b5dc38cf87824389
+  update_ref: main
+  license: Apache-2.0

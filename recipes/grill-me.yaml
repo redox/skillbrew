@@ -1,0 +1,17 @@
+name: grill-me
+source:
+  repository: https://github.com/mattpocock/skills.git
+  path: skills/productivity/grill-me
+  ref: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Make this skill compatible with the Codex Agent Skills validator.
+
+      - Remove the unsupported `disable-model-invocation` YAML frontmatter key.
+      - Preserve all supported frontmatter fields exactly.
+      - Do not change the skill body, wording, whitespace, or any other file.
+    mode: semantic-rebase
+    allowed_paths: [ SKILL.md ]

@@ -1,0 +1,33 @@
+name: writing-plans
+source:
+  repository: https://github.com/obra/superpowers.git
+  path: skills/writing-plans
+  ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Adapt this skill to rely on the host agent's built-in planning capability.
+
+      - Treat the active built-in plan as the sole source of truth.
+      - Never create or commit plan Markdown files, including anything under
+        `docs/superpowers/plans/`, unless the user explicitly asks for a file.
+      - If the host has no built-in plan capability, present the plan in chat;
+        still do not create a file automatically.
+      - Preserve the useful planning discipline: concrete file paths, small
+        tasks, tests, verification commands, dependencies, and execution handoff.
+      - Remove the `using-git-worktrees` dependency entirely. Never invoke,
+        recommend, or require that skill. Planning must be independent of how
+        the host agent provides or isolates its workspace.
+      - Remove every reference to `using-git-worktrees` from context notes,
+        preconditions, examples, and integration guidance.
+      - Adapt the plan-reviewer prompt to review plan content supplied in its
+        task context rather than reading a plan document from disk.
+      - Remove document headers, filename conventions, save/commit steps, and
+        completion messages that claim a plan was saved.
+      - Avoid unrelated stylistic rewrites.
+    mode: semantic-rebase
+    allowed_paths:
+      - SKILL.md
+      - plan-document-reviewer-prompt.md

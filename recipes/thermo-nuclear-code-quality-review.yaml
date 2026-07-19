@@ -1,0 +1,17 @@
+name: thermo-nuclear-code-quality-review
+source:
+  repository: https://github.com/cursor/plugins.git
+  path: thermos/skills/thermo-nuclear-code-quality-review
+  ref: 3fe2823ce17c1656c222d4b7c59d3f82fbf20143
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Make this skill compatible with the Codex Agent Skills validator.
+
+      - Remove the unsupported `disable-model-invocation` YAML frontmatter key.
+      - Preserve all supported frontmatter fields exactly.
+      - Do not change the skill body, wording, whitespace, or any other file.
+    mode: semantic-rebase
+    allowed_paths: [ SKILL.md ]

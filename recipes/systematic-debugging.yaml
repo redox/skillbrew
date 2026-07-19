@@ -1,0 +1,20 @@
+name: systematic-debugging
+source:
+  repository: https://github.com/obra/superpowers.git
+  path: skills/systematic-debugging
+  ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Remove every dependency on the `verification-before-completion` skill.
+
+      - Remove instructions and references that invoke or recommend
+        `superpowers:verification-before-completion`.
+      - Do not replace it with another external skill dependency.
+      - Preserve this skill's own Phase 4 testing and fix-verification steps.
+      - Preserve all unrelated debugging guidance, resources, and wording.
+      - Avoid stylistic rewrites.
+    mode: semantic-rebase
+    allowed_paths: [ SKILL.md ]

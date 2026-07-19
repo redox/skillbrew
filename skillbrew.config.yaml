@@ -1,0 +1,11 @@
+version: 1
+skills_dir: skills
+recipes_dir: recipes
+state_dir: .skillbrew
+lockfile: skills.lock.yaml
+
+transformer:
+  provider: cursor-sdk
+  id: cursor-sdk-1.0.23/composer-2.5
+  model: composer-2.5
+  timeout_ms: 600000

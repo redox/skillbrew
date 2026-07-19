@@ -1,0 +1,6 @@
+node_modules/
+.skillbrew/
+.env
+.env.local
+*.log
+.DS_Store

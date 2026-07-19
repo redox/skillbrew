@@ -1,0 +1,23 @@
+name: requesting-code-review
+source:
+  repository: https://github.com/obra/superpowers.git
+  path: skills/requesting-code-review
+  ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Remove assumptions that requirements live in a plan Markdown file.
+
+      - Use the active built-in plan, the current task text, or requirements
+        supplied in chat as the review baseline.
+      - Do not create, save, or commit planning/specification files.
+      - Replace `docs/superpowers/plans/...` examples with inline task or active
+        plan context.
+      - Preserve the code-review workflow and reviewer rigor.
+      - Avoid unrelated stylistic rewrites.
+    mode: semantic-rebase
+    allowed_paths:
+      - SKILL.md
+      - code-reviewer.md

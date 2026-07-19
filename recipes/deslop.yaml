@@ -1,0 +1,7 @@
+name: deslop
+source:
+  repository: https://github.com/cursor/plugins.git
+  path: cursor-team-kit/skills/deslop
+  ref: 3fe2823ce17c1656c222d4b7c59d3f82fbf20143
+  update_ref: main
+  license: MIT

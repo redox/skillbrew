@@ -1,0 +1,42 @@
+name: subagent-driven-development
+source:
+  repository: https://github.com/obra/superpowers.git
+  path: skills/subagent-driven-development
+  ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Adapt this skill to execute the host agent's active built-in plan.
+
+      - Do not require, create, save, or commit plan/spec Markdown files.
+      - Read the active built-in plan once, then pass each task's full text and
+        relevant context inline in the subagent dispatch.
+      - Do not write task briefs or other planning handoff files to disk.
+        Remove the dependency on `scripts/task-brief`; use an inline
+        `[TASK_TEXT]` placeholder in implementer and reviewer prompts instead.
+      - Replace `docs/superpowers/plans/...` examples with the active plan.
+      - Preserve task isolation, implementer/reviewer sequencing, diff-based
+        review packages, verification, and final branch review.
+      - Remove the `finishing-a-development-branch` dependency entirely.
+        Never invoke, recommend, or require that skill. After the final
+        whole-branch review passes, summarize the completed work and hand
+        control back to the user without starting a branch-completion workflow.
+      - Remove every reference to `finishing-a-development-branch` from the
+        process diagram, instructions, examples, and integration list.
+      - Remove the `using-git-worktrees` dependency entirely. Never invoke,
+        recommend, or require that skill. Operate in the workspace supplied by
+        the host agent and do not add a replacement worktree-setup workflow.
+      - Remove every reference to `using-git-worktrees` from the instructions,
+        examples, preconditions, and integration list.
+      - Keep compatibility with the adapted `writing-plans` skill without
+        assuming it wrote a file.
+      - Avoid unrelated stylistic rewrites.
+    mode: semantic-rebase
+    allowed_paths:
+      - SKILL.md
+      - implementer-prompt.md
+      - task-reviewer-prompt.md
+      - scripts/task-brief
+      - scripts/sdd-workspace

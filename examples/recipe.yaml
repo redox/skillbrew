@@ -1,0 +1,30 @@
+name: example
+
+source:
+  # Optional when the local name differs from the upstream SKILL.md name.
+  # name: upstream-example
+  repository: https://github.com/owner/repository.git
+  path: skills/example
+  ref: REPLACE_WITH_A_COMMIT_SHA
+  update_ref: main
+
+transforms:
+  - type: llm
+    prompt: |
+      Adapt this skill to our engineering environment while preserving its
+      original discipline and sequencing.
+
+      - Remove assumptions tied to the upstream author's private setup.
+      - Do not invent commands or infrastructure.
+      - Preserve upstream wording when it already satisfies these requirements.
+    mode: semantic-rebase
+    allowed_paths:
+      - SKILL.md
+      - references/**
+    forbidden_paths:
+      - scripts/**
+
+validation:
+  require:
+    - SKILL.md
+  max_skill_tokens: 5000

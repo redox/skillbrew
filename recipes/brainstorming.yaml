@@ -1,0 +1,33 @@
+name: brainstorming
+source:
+  repository: https://github.com/obra/superpowers.git
+  path: skills/brainstorming
+  ref: d884ae04edebef577e82ff7c4e143debd0bbec99
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Adapt this skill to use the host agent's built-in planning capability for
+      the approved design and implementation plan.
+
+      - Never create or commit design/spec/plan Markdown files, including paths
+        under `docs/superpowers/specs/` or `docs/superpowers/plans/`, unless the
+        user explicitly asks for a file.
+      - Keep the design in the conversation and active built-in plan.
+      - Preserve the one-question-at-a-time discovery, alternatives, design
+        presentation, user approval, self-review, and transition to planning.
+      - The terminal state should populate or refine the active built-in plan,
+        using the adapted `writing-plans` skill when available.
+      - Remove references to optional skills that are not included in this
+        collection, including `elements-of-style:writing-clearly-and-concisely`,
+        `frontend-design`, and `mcp-builder`. Use direct concise-writing
+        guidance where needed instead of introducing replacement dependencies.
+      - Adapt the spec reviewer prompt to review design content supplied in its
+        task context rather than reading a spec document from disk.
+      - Remove filename conventions, save/commit steps, and file-based handoffs.
+      - Avoid unrelated stylistic rewrites.
+    mode: semantic-rebase
+    allowed_paths:
+      - SKILL.md
+      - spec-document-reviewer-prompt.md

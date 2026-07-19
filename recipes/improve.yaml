@@ -1,0 +1,34 @@
+name: improve
+source:
+  repository: https://github.com/shadcn/improve.git
+  path: skills/improve
+  ref: 03369ee6d7cafbfcecc4346539b05b3dc0a603bb
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Adapt this skill to use the host agent's built-in planning capability as
+      the only default destination for implementation plans.
+
+      - Never create `plans/`, `advisor-plans/`, plan README indexes, or any
+        plan/spec Markdown file unless the user explicitly asks for files.
+      - Preserve the read-only codebase audit, evidence gathering,
+        prioritization, user selection, and high-quality self-contained plans.
+      - Put selected findings and complete implementation steps into the active
+        built-in plan. If no built-in plan capability exists, present them in
+        chat without writing files.
+      - Adapt the plan template into a structure for built-in plan content;
+        remove filenames, index rows, file statuses, and instructions to update
+        `plans/README.md`.
+      - Adapt reconciliation and execution guidance to the active plan rather
+        than plan files. Pass full plan/task text directly to executor agents.
+      - Keep GitHub issue publication strictly opt-in; construct issue bodies
+        from plan content without requiring a temporary plan file.
+      - Preserve safety checks, drift detection, done criteria, dependencies,
+        and review rigor.
+      - Avoid unrelated stylistic rewrites.
+    mode: semantic-rebase
+    allowed_paths:
+      - SKILL.md
+      - references/**
