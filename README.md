@@ -4,30 +4,37 @@ Curate, adapt, and update a personal collection of [Agent Skills](https://agents
 
 Skillbrew vendors each skill as ordinary files, records its exact upstream revision, and optionally applies a semantic patch with the Cursor Agent SDK. Updates preserve local intent while incorporating upstream improvements, producing a normal Git diff for review.
 
-## Quick start
+## Install the skills
 
-Install the project dependencies:
+Skillbrew builds the collection in `skills/`. To install the generated skills from [redox/skillbrew](https://github.com/redox/skillbrew) into Cursor, Codex, or another supported agent, use the external `skills` installer:
+
+```sh
+npx skills add redox/skillbrew
+```
+
+Install only one skill with `--skill`:
+
+```sh
+npx skills add redox/skillbrew --skill brainstorming
+```
+
+These `npx skills` commands consume Skillbrew's generated output; they are not Skillbrew commands and do not require Bun.
+
+## Develop the collection
+
+You only need Bun when adding, updating, or validating the collection itself. Install the development dependencies, then use the Skillbrew CLI through the project scripts:
 
 ```sh
 bun install
-```
-
-See the available skills:
-
-```sh
 bun run start list
 ```
 
-Install the collection into a supported agent:
+Skillbrew commands in this repository always begin with `bun run start`:
 
-```sh
-npx skills add .
-```
-
-To install one skill instead:
-
-```sh
-npx skills add . --skill brainstorming
+```text
+bun run start list
+bun run start add <source>
+bun run start update [name]
 ```
 
 ## Updating skills
