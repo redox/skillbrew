@@ -1,0 +1,31 @@
+{
+  "name": "skillbrew",
+  "version": "0.1.0",
+  "description": "A curated collection of adaptable engineering skills for agentic coding harnesses",
+  "author": {
+    "name": "redox"
+  },
+  "homepage": "https://github.com/redox/skillbrew",
+  "repository": "https://github.com/redox/skillbrew",
+  "keywords": [
+    "agent-skills",
+    "coding-agents",
+    "debugging",
+    "planning",
+    "code-review",
+    "workflows"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Skillbrew",
+    "shortDescription": "Curated engineering workflows for coding agents",
+    "longDescription": "Use Skillbrew for brainstorming, planning, implementation, debugging, CI repair, code review, and code-quality workflows.",
+    "developerName": "redox",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/redox/skillbrew"
+  }
+}

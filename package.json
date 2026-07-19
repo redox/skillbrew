@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": ".opencode/plugins/skillbrew.js",
   "bin": {
     "skillbrew": "./src/cli.ts"
   },
@@ -11,6 +12,19 @@
     "check": "tsc --noEmit",
     "lint": "bun run src/lint.ts",
     "test": "bun test"
+  },
+  "keywords": [
+    "pi-package",
+    "agent-skills",
+    "coding-agents",
+    "debugging",
+    "planning",
+    "code-review"
+  ],
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
   },
   "dependencies": {
     "@cursor/sdk": "1.0.23",

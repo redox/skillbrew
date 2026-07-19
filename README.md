@@ -4,21 +4,68 @@ Curate, adapt, and update a personal collection of [Agent Skills](https://agents
 
 Skillbrew vendors each skill as ordinary files, records its exact upstream revision, and optionally applies a semantic patch with the Cursor Agent SDK. Updates preserve local intent while incorporating upstream improvements, producing a normal Git diff for review.
 
-## Install the skills
+## Install
 
-Skillbrew builds the collection in `skills/`. To install the generated skills from [redox/skillbrew](https://github.com/redox/skillbrew) into Cursor, Codex, or another supported agent, use the external `skills` installer:
+### Any agent harness
+
+The recommended installer is the open-source [`skills`](https://github.com/vercel-labs/skills) CLI. It detects installed harnesses and places Skillbrew's generated skills in their native skill directories:
 
 ```sh
 npx skills add redox/skillbrew
 ```
 
-Install only one skill with `--skill`:
+Install every Skillbrew skill globally in every supported harness without prompts:
 
 ```sh
+npx skills add redox/skillbrew --skill '*' --agent '*' --global --yes
+```
+
+Target particular harnesses or install only one skill:
+
+```sh
+npx skills add redox/skillbrew --agent cursor --agent codex --agent claude-code
 npx skills add redox/skillbrew --skill brainstorming
 ```
 
-These `npx skills` commands consume Skillbrew's generated output; they are not Skillbrew commands and do not require Bun.
+The installer supports Cursor, Codex, Claude Code, OpenCode, Pi, Antigravity, Kimi, GitHub Copilot, and many other Agent Skills-compatible tools. These are external installation commands; they consume Skillbrew's generated output and do not require Bun.
+
+### Native plugin systems
+
+Skillbrew also ships native manifests for harnesses that install plugins directly from Git repositories.
+
+Claude Code:
+
+```text
+/plugin marketplace add redox/skillbrew
+/plugin install skillbrew@skillbrew
+```
+
+Antigravity:
+
+```sh
+agy plugin install https://github.com/redox/skillbrew
+```
+
+Factory Droid:
+
+```sh
+droid plugin marketplace add https://github.com/redox/skillbrew
+droid plugin install skillbrew@skillbrew
+```
+
+Kimi Code:
+
+```text
+/plugins install https://github.com/redox/skillbrew
+```
+
+Pi:
+
+```sh
+pi install git:github.com/redox/skillbrew
+```
+
+For OpenCode, add the Git-backed package to `opencode.json`; see [the OpenCode instructions](.opencode/INSTALL.md).
 
 ## Develop the collection
 
@@ -196,6 +243,12 @@ transformer:
 .
 ├── recipes/               # Upstream sources and inline semantic patches
 ├── skills/                # Generated, installable Agent Skills
+├── .claude-plugin/        # Claude-compatible plugin and marketplace manifests
+├── .codex-plugin/         # Codex plugin manifest
+├── .cursor-plugin/        # Cursor plugin manifest
+├── .kimi-plugin/          # Kimi plugin manifest
+├── .opencode/             # OpenCode package adapter
+├── .agents/plugins/       # Agent plugin marketplace metadata
 ├── LICENSES/              # Licenses for vendored upstream content
 ├── skills.lock.yaml       # Source, prompt, transformer, and output provenance
 ├── skillbrew.config.yaml  # Project and Cursor configuration

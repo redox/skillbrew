@@ -1,5 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { lintDistribution } from "./distribution.ts";
 import { loadLockfile, loadProject, loadRecipe, type Project } from "./project.ts";
 import type { LockEntry, Recipe } from "./types.ts";
 import { hashText, hashTree, listFiles, pathExists } from "./util.ts";
@@ -154,7 +155,10 @@ export async function lintProject(project: Project): Promise<string[]> {
 
 if (import.meta.main) {
   const project = await loadProject(resolve(Bun.env.SKILLBREW_ROOT ?? process.cwd()));
-  const issues = await lintProject(project);
+  const issues = [
+    ...await lintProject(project),
+    ...await lintDistribution(project.root),
+  ].sort();
   if (issues.length > 0) {
     console.error(`Skillbrew lint found ${issues.length} issue${issues.length === 1 ? "" : "s"}:`);
     for (const issue of issues) console.error(`- ${issue}`);
