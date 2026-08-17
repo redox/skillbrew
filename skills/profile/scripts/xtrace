@@ -1,0 +1,345 @@
+#!/bin/bash
+# xtrace — Profile any command. Works like `time` — just prefix your command.
+#
+# Records an Instruments trace, prints summaries to stderr, outputs trace path to stdout.
+# Pipe the path to any analysis tool.
+#
+# Usage:
+#   xtrace ./my_app --benchmark
+#   cmake --build . && xtrace ./my_app
+#   xtrace -d 5 ./my_app | trace-flamegraph -
+#   xtrace ./my_app | trace-speedscope -
+#   TRACE=$(xtrace ./my_app)
+
+# Resolve through symlinks to find the real scripts directory
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+    DIR="$(cd "$(dirname "$SOURCE")" && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ "$SOURCE" != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd "$(dirname "$SOURCE")" && pwd)"
+
+usage() {
+    cat >&2 <<'EOF'
+Usage: xtrace [options] command [args...]
+
+Profile any command. Like `time`, just prefix your command.
+
+Records an Instruments trace (Time Profiler by default), prints summaries to stderr,
+and outputs the trace file path to stdout for piping.
+
+Options:
+  -d DURATION       Recording duration: 10, 10s, 2.5s, 500ms (default: 30s, or until exit)
+  -t TEMPLATE       Instruments template (default: 'Time Profiler')
+  --instrument STR  Add an Instruments instrument by name (repeatable)
+  --shader-timeline Enable Metal Shader Timeline by patching a GPU template on the fly
+  --gpu             Shorthand for '-t "Metal System Trace"' + GPU summary
+  --cpu             Shorthand for '-t "Time Profiler"'
+  --gpu-process STR Optional process filter override for GPU summary
+  -o PATH           Output .trace path (default: auto in /tmp)
+  --no-summary      Skip auto-summary, just output trace path
+  --top N           Number of functions to show in CPU / shader summaries (default: 15)
+  -h, --help        Show this help
+
+Pipe to other tools:
+  xtrace ./app | trace-flamegraph -          # flamegraph
+  xtrace ./app | trace-speedscope -          # interactive UI
+  xtrace ./app | xargs trace-analyze summary # full analysis
+  cmake --build . && xtrace ./app            # build then profile
+  TRACE=$(xtrace ./app); trace-analyze summary $TRACE  # save path
+
+Memory profiling:
+  xtrace -t Allocations ./app         # memory summary + trace
+  xtrace -t Leaks ./app               # leak detection + trace
+
+GPU profiling:
+  xtrace --gpu ./app                           # Metal System Trace + GPU summary
+  xtrace --gpu --gpu-process myapp ./app
+  xtrace --gpu --shader-timeline ./app         # enable Shader Timeline + shader tooling
+  xtrace -t 'Game Performance' ./app           # Game Performance template + Metal summary
+  xtrace --instrument GPU --instrument 'Metal Application' ./app
+
+EOF
+    exit "${1:-1}"
+}
+
+DURATION="30s"
+TEMPLATE="Time Profiler"
+TEMPLATE_EXPLICIT=false
+INSTRUMENTS=()
+SHADER_TIMELINE=false
+OUTPUT=""
+SUMMARIZE=true
+TOP=15
+GPU_PROCESS_FILTER=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -d)            DURATION="$2"; shift 2 ;;
+        -t)            TEMPLATE="$2"; TEMPLATE_EXPLICIT=true; shift 2 ;;
+        --instrument)  INSTRUMENTS+=("$2"); shift 2 ;;
+        --shader-timeline) SHADER_TIMELINE=true; shift ;;
+        --gpu)         TEMPLATE="Metal System Trace"; TEMPLATE_EXPLICIT=true; shift ;;
+        --cpu)         TEMPLATE="Time Profiler"; TEMPLATE_EXPLICIT=true; shift ;;
+        --gpu-process) GPU_PROCESS_FILTER="$2"; shift 2 ;;
+        -o)            OUTPUT="$2"; shift 2 ;;
+        --no-summary)  SUMMARIZE=false; shift ;;
+        --top)         TOP="$2"; shift 2 ;;
+        -h|--help)     usage 0 ;;
+        --)            shift; break ;;
+        -*)            break ;;  # pass unknown flags to the command
+        *)             break ;;
+    esac
+done
+
+CMD=("$@")
+
+if [ ${#CMD[@]} -eq 0 ]; then
+    echo "Error: No command specified." >&2
+    usage 1
+fi
+
+# Auto-generate output path in /tmp
+if [ -z "$OUTPUT" ]; then
+    BIN_NAME=$(basename "${CMD[0]}")
+    OUTPUT="/tmp/trace_${BIN_NAME}_$(date +%Y%m%d_%H%M%S).trace"
+fi
+
+# ── Memory template handling ─────────────────────────────────────────────────
+# For memory templates, we orchestrate: launch → attach xctrace → live analysis
+_is_memory_template() {
+    case "$1" in
+        Allocations|Leaks|"Game Memory") return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+_is_metal_template() {
+    case "$1" in
+        "Metal System Trace"|"Game Performance"|"Game Performance Overview"|"RealityKit Trace") return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+_has_metal_instruments() {
+    if [ ${#INSTRUMENTS[@]} -eq 0 ]; then
+        return 1
+    fi
+
+    local instrument lower
+    for instrument in "${INSTRUMENTS[@]}"; do
+        lower=$(printf '%s' "$instrument" | tr '[:upper:]' '[:lower:]')
+        case "$lower" in
+            *metal*|*gpu*|*realitykit*) return 0 ;;
+        esac
+    done
+    return 1
+}
+
+# Match trace-record.sh semantics: if custom instruments were supplied without an
+# explicit template, let xctrace build a custom recording from those instruments.
+if [ ${#INSTRUMENTS[@]} -gt 0 ] && [ "$TEMPLATE_EXPLICIT" = false ]; then
+    TEMPLATE=""
+fi
+
+# If shader timeline was requested without choosing a Metal template explicitly,
+# switch from the default CPU template to Metal System Trace.
+if [ "$SHADER_TIMELINE" = true ] && [ "$TEMPLATE_EXPLICIT" = false ]; then
+    TEMPLATE="Metal System Trace"
+fi
+
+if _is_memory_template "$TEMPLATE" && [ ${#CMD[@]} -gt 0 ]; then
+    # Memory template with launch mode — use trace-memory.py orchestration
+
+    # Resolve binary (trace-record.sh normally does this)
+    BINARY="${CMD[0]}"
+    if [[ "$BINARY" != /* ]]; then
+        if command -v "$BINARY" &>/dev/null; then
+            CMD[0]=$(command -v "$BINARY")
+        elif [ -e "$BINARY" ]; then
+            CMD[0]=$(realpath "$BINARY" 2>/dev/null || echo "$BINARY")
+        fi
+    fi
+
+    # Launch the process with MallocStackLogging
+    echo "Launching with MallocStackLogging for memory analysis..." >&2
+    MallocStackLogging=1 "${CMD[@]}" &>/dev/null &
+    TARGET_PID=$!
+    sleep 0.5
+
+    if ! kill -0 "$TARGET_PID" 2>/dev/null; then
+        echo "Error: Process exited immediately" >&2
+        exit 1
+    fi
+
+    BIN_NAME=$(basename "${CMD[0]}")
+    echo "Process: $BIN_NAME (PID $TARGET_PID)" >&2
+
+    # Start xctrace recording attached to PID in background
+    "$SCRIPT_DIR/trace-record.sh" -t "$TEMPLATE" -d "$DURATION" -o "$OUTPUT" --no-malloc-logging -p "$TARGET_PID" &>/dev/null &
+    XCTRACE_BG_PID=$!
+
+    # Run memory analysis
+    echo "" >&2
+    MEMORY_MODE="summary"
+    case "$TEMPLATE" in
+        Leaks) MEMORY_MODE="leaks" ;;
+    esac
+
+    if [ "$SUMMARIZE" = true ]; then
+        python3 "$SCRIPT_DIR/trace-memory.py" "$MEMORY_MODE" -p "$TARGET_PID" --top "$TOP" >&2 || true
+    fi
+
+    # Wait a bit then clean up
+    sleep 2
+    kill "$TARGET_PID" 2>/dev/null || true
+    wait "$TARGET_PID" 2>/dev/null || true
+    wait "$XCTRACE_BG_PID" 2>/dev/null || true
+
+    # Find the trace file
+    FINAL_PATH="$OUTPUT"
+    if [ -e "$OUTPUT" ]; then
+        FINAL_PATH=$(cd "$(dirname "$OUTPUT")" && echo "$(pwd)/$(basename "$OUTPUT")")
+    fi
+
+    TRACE_SIZE=$(du -sh "$FINAL_PATH" 2>/dev/null | cut -f1 || echo "?")
+    echo "" >&2
+    echo "Trace saved: $FINAL_PATH ($TRACE_SIZE)" >&2
+    echo "Open in Instruments.app for full allocation details" >&2
+    echo "$FINAL_PATH"
+    exit 0
+fi
+
+# Record — trace-record.sh prints path to stdout, progress to stderr
+TRACE_RECORD_ARGS=(-d "$DURATION" -o "$OUTPUT")
+if [ -n "$TEMPLATE" ]; then
+    TRACE_RECORD_ARGS+=(-t "$TEMPLATE")
+fi
+if [ "$SHADER_TIMELINE" = true ]; then
+    TRACE_RECORD_ARGS+=(--shader-timeline)
+fi
+if [ ${#INSTRUMENTS[@]} -gt 0 ]; then
+    for instrument in "${INSTRUMENTS[@]}"; do
+        TRACE_RECORD_ARGS+=(--instrument "$instrument")
+    done
+fi
+TRACE_PATH=$("$SCRIPT_DIR/trace-record.sh" "${TRACE_RECORD_ARGS[@]}" -- "${CMD[@]}")
+
+if [ -z "$TRACE_PATH" ] || [ ! -e "$TRACE_PATH" ]; then
+    echo "Error: Recording failed." >&2
+    exit 1
+fi
+
+FINAL_PATH="$TRACE_PATH"
+
+# Auto-summarize to stderr (and detect empty traces for fallback)
+if [ "$SUMMARIZE" = true ]; then
+    if _is_metal_template "$TEMPLATE" || _has_metal_instruments; then
+        echo "" >&2
+        if [ -n "$GPU_PROCESS_FILTER" ]; then
+            python3 "$SCRIPT_DIR/trace-gpu.py" "$TRACE_PATH" --process "$GPU_PROCESS_FILTER" >&2 || true
+        else
+            python3 "$SCRIPT_DIR/trace-gpu.py" "$TRACE_PATH" >&2 || true
+        fi
+
+        if [ "$SHADER_TIMELINE" = true ]; then
+            echo "" >&2
+            set +e
+            SHADER_SUMMARY=$(python3 "$SCRIPT_DIR/trace-shader.py" hotspots "$TRACE_PATH" --top "$TOP" 2>&1)
+            SHADER_EXIT=$?
+            set -e
+            if [ -n "$SHADER_SUMMARY" ]; then
+                printf '%s\n' "$SHADER_SUMMARY" >&2
+            fi
+        fi
+
+        # Also show CPU-side hotspots from any embedded time-profile table when available.
+        echo "" >&2
+        set +e
+        METAL_CPU_SUMMARY=$(python3 "$SCRIPT_DIR/trace-analyze.py" summary "$TRACE_PATH" --top "$TOP" 2>&1)
+        METAL_CPU_EXIT=$?
+        set -e
+        if [ "$METAL_CPU_EXIT" -eq 0 ] && [ -n "$METAL_CPU_SUMMARY" ]; then
+            printf '%s\n' "$METAL_CPU_SUMMARY" >&2
+        fi
+    else
+        echo "" >&2
+        set +e
+        python3 "$SCRIPT_DIR/trace-analyze.py" summary "$TRACE_PATH" --top "$TOP" >&2 2>&1
+        SUMMARY_EXIT=$?
+        set -e
+
+        if [ "$SUMMARY_EXIT" -ne 0 ]; then
+            echo "" >&2
+            echo "⚠  No CPU samples in trace — Time Profiler only captures running threads." >&2
+            echo "   (GPU-bound, I/O-bound, or blocked workloads produce empty traces.)" >&2
+            echo "   Falling back to macOS sample command (captures all thread states)..." >&2
+            echo "" >&2
+
+            # Re-run the command under sample-quick.sh
+            # Convert duration to seconds for sample
+            SAMPLE_SECS=30
+            if [[ "$DURATION" =~ ^([0-9]+)(s|ms|m)?$ ]]; then
+                _NUM="${BASH_REMATCH[1]}"
+                _UNIT="${BASH_REMATCH[2]}"
+                case "$_UNIT" in
+                    s|"") SAMPLE_SECS=$_NUM ;;
+                    ms)   SAMPLE_SECS=$(( (_NUM + 999) / 1000 )) ;;
+                    m)    SAMPLE_SECS=$(( _NUM * 60 )) ;;
+                esac
+            fi
+
+            set +e
+            SAMPLE_PATH=$("$SCRIPT_DIR/sample-quick.sh" --launch -d "$SAMPLE_SECS" -- "${CMD[@]}")
+            SAMPLE_EXIT=$?
+            set -e
+
+            if [ "$SAMPLE_EXIT" -eq 0 ] && [ -n "$SAMPLE_PATH" ] && [ -f "$SAMPLE_PATH" ]; then
+                FINAL_PATH="$SAMPLE_PATH"
+                echo "" >&2
+                python3 "$SCRIPT_DIR/trace-analyze.py" summary "$SAMPLE_PATH" --top "$TOP" >&2 || true
+            else
+                echo "   Fallback also failed. The empty trace may still be viewable in Instruments.app." >&2
+            fi
+        fi
+    fi
+else
+    # With --no-summary, do a quick silent check and warn if empty.
+    # For Metal/GPU traces we intentionally skip CPU-empty fallback because
+    # those traces can be valid even with sparse CPU samples.
+    if ! _is_metal_template "$TEMPLATE" && ! _has_metal_instruments; then
+        set +e
+        python3 "$SCRIPT_DIR/trace-analyze.py" summary "$TRACE_PATH" --top 1 --json >/dev/null 2>&1
+        CHECK_EXIT=$?
+        set -e
+
+        if [ "$CHECK_EXIT" -ne 0 ]; then
+            echo "⚠  Trace appears empty (no CPU samples — workload likely GPU/IO-bound)." >&2
+            echo "   Falling back to macOS sample command..." >&2
+
+            SAMPLE_SECS=30
+            if [[ "$DURATION" =~ ^([0-9]+)(s|ms|m)?$ ]]; then
+                _NUM="${BASH_REMATCH[1]}"
+                _UNIT="${BASH_REMATCH[2]}"
+                case "$_UNIT" in
+                    s|"") SAMPLE_SECS=$_NUM ;;
+                    ms)   SAMPLE_SECS=$(( (_NUM + 999) / 1000 )) ;;
+                    m)    SAMPLE_SECS=$(( _NUM * 60 )) ;;
+                esac
+            fi
+
+            set +e
+            SAMPLE_PATH=$("$SCRIPT_DIR/sample-quick.sh" --launch -d "$SAMPLE_SECS" -- "${CMD[@]}")
+            SAMPLE_EXIT=$?
+            set -e
+
+            if [ "$SAMPLE_EXIT" -eq 0 ] && [ -n "$SAMPLE_PATH" ] && [ -f "$SAMPLE_PATH" ]; then
+                FINAL_PATH="$SAMPLE_PATH"
+            fi
+        fi
+    fi
+fi
+
+# Output final path to stdout (for piping)
+echo "$FINAL_PATH"

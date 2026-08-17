@@ -101,6 +101,18 @@ skills:
     previous_output_sha256: 98bed1a7505cba5df6a65d34a4fb1f7090f972e8f022010e03c9a1751d7d651b
     output_sha256: 98bed1a7505cba5df6a65d34a4fb1f7090f972e8f022010e03c9a1751d7d651b
     generated_at: 2026-07-19T10:10:29.823Z
+  profile:
+    source_repository: https://github.com/Kr1sso/xtrace-skill.git
+    source_path: .
+    source_ref: 46af8b632ee1712477a97d8718af662e6026161a
+    source_tree_sha256: 0b7f2d176449e074e1e674d08158886e706578ec2ab49463fb22a226240cbda9
+    source_name: instruments
+    license: MIT
+    prompt_sha256: 0d8603b5b86336e7e9615dbd86199c7255d4014b92cea471dcfc7945fcc0d9ef
+    transformer: cursor-sdk-1.0.23/composer-2.5
+    previous_output_sha256: c586526f57253495c71f1b04c2b8f6d7d905285d4da375a8b757ca4b27f93917
+    output_sha256: 0042f19dcc45890bf632a82356cc9368e931b7c1d721cdb7d43458df7eaa36f3
+    generated_at: 2026-08-17T06:06:19.736Z
   receiving-code-review:
     source_repository: https://github.com/obra/superpowers.git
     source_path: skills/receiving-code-review

@@ -1,0 +1,46 @@
+name: profile
+source:
+  name: instruments
+  repository: https://github.com/Kr1sso/xtrace-skill.git
+  path: .
+  ref: 46af8b632ee1712477a97d8718af662e6026161a
+  update_ref: main
+  license: MIT
+transforms:
+  - type: llm
+    prompt: |
+      Rebalance this skill for highly scalable low-level systems software
+      (servers, runtimes, databases, storage engines, networking, compilers)
+      rather than games or GPU apps.
+
+      - Keep Instruments/xctrace and the existing CLI scripts as the tools.
+        Never invent flags, templates, or commands that are not already in
+        the upstream skill or bundled scripts.
+      - Make CPU wall time, syscall pressure, thread contention, allocation
+        rate, and memory fragmentation the default investigation path.
+      - Elevate Time Profiler, System Trace, Processor Trace, CPU Counters,
+        Allocations, and Leaks. Show how to record and interpret wall time,
+        on-CPU vs off-CPU time, syscall volume/latency, lock and thread
+        contention, heap allocation count/churn, and fragmentation or
+        allocator pressure (RSS vs dirty vs resident, MALLOC_* growth,
+        region/heap breakdowns).
+      - Demote GPU, Metal, shader, `.gputrace`, and Game Performance
+        material. Keep those tools discoverable, but move them out of the
+        primary quick start and treat them as optional when the workload is
+        actually GPU-bound. Do not delete the GPU scripts from the table.
+      - Update the title, description, quick start, templates table, and
+        interpretation guidance to match this priority. Keep the local
+        skill name `profile`.
+      - Preserve install, symbol, recording, analysis, visualization, and
+        troubleshooting guidance that still applies.
+      - Avoid unrelated stylistic rewrites.
+    mode: semantic-rebase
+    allowed_paths:
+      - SKILL.md
+    forbidden_paths:
+      - scripts/**
+      - examples/**
+      - install.sh
+      - test.sh
+      - README.md
+      - LICENSE
