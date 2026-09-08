@@ -29,8 +29,15 @@ transforms:
         platform reference files that are not bundled with this skill. Keep
         useful subagent guidance self-contained in `SKILL.md`.
       - Keep compatibility with the adapted `writing-plans` skill without
-        assuming it wrote a file.
-      - Remove examples and handoffs that rely on `docs/superpowers/plans/`.
+        assuming it wrote a file. Compatibility means: execute a plan that
+        already exists as the active built-in plan or in chat. Do not list
+        writing-plans as a required workflow skill or keep an Integration /
+        Required workflow skills section.
+      - Remove examples, handoffs, and Integration sections that rely on
+        `docs/superpowers/plans/` or a writing-plans prerequisite.
+      - Never mention `superpowers:*`. Refer to sibling skills by their
+        local unprefixed names (for example `subagent-driven-development`).
+        Drop Superpowers product branding.
       - Avoid unrelated stylistic rewrites.
     mode: semantic-rebase
     allowed_paths: [ SKILL.md ]

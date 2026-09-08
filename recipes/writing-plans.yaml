@@ -10,6 +10,13 @@ transforms:
     prompt: |
       Adapt this skill to rely on the host agent's built-in planning capability.
 
+      - This skill is only for large features or large refactorings. Do
+        not require, recommend, or default to a plan for small or medium
+        work. If the work is small or medium, stop and implement directly
+        instead of writing a plan.
+      - Rewrite the description and add a hard When to Use / When NOT to
+        Use gate so the skill does not trigger on any multi-step task.
+        Small and medium features are out of scope.
       - Treat the active built-in plan as the sole source of truth.
       - Never create or commit plan Markdown files, including anything under
         `docs/superpowers/plans/`, unless the user explicitly asks for a file.
@@ -26,6 +33,9 @@ transforms:
         task context rather than reading a plan document from disk.
       - Remove document headers, filename conventions, save/commit steps, and
         completion messages that claim a plan was saved.
+      - Never mention `superpowers:*`. Refer to sibling skills by their
+        local unprefixed names (for example `subagent-driven-development`,
+        `executing-plans`).
       - Avoid unrelated stylistic rewrites.
     mode: semantic-rebase
     allowed_paths:

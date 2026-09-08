@@ -1,9 +1,19 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: Use when planning a large feature or large refactoring, before touching code. Do not use for small or medium features.
 ---
 
 # Writing Plans
+
+## When to Use
+
+Use **only** for:
+- Large features — multiple subsystems, many files, or unclear sequencing
+- Large refactorings — broad structural change across modules
+
+**Do not write a plan for small or medium work.** Localized features, few-file changes, bug fixes, and well-bounded incremental work should be implemented directly.
+
+If the work is not large, stop. Do not announce, do not populate a plan, and do not offer an execution handoff.
 
 ## Overview
 
@@ -62,7 +72,7 @@ Include these in the plan (via built-in plan or chat):
 
 ## Task Structure
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-driven-development (recommended) or executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 ````markdown
 ### Task N: [Component Name]
@@ -152,9 +162,9 @@ After the plan is complete, offer execution choice:
 **Which approach?"**
 
 **If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
+- **REQUIRED SUB-SKILL:** Use subagent-driven-development
 - Fresh subagent per task + two-stage review
 
 **If Inline Execution chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
+- **REQUIRED SUB-SKILL:** Use executing-plans
 - Batch execution with checkpoints for review

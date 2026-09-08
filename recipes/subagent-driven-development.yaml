@@ -31,7 +31,12 @@ transforms:
       - Remove every reference to `using-git-worktrees` from the instructions,
         examples, preconditions, and integration list.
       - Keep compatibility with the adapted `writing-plans` skill without
-        assuming it wrote a file.
+        assuming it wrote a file. Compatibility means: execute the active
+        built-in plan or chat plan. Do not list writing-plans as a required
+        workflow skill or treat it as the plan source.
+      - Never mention `superpowers:*`. Refer to sibling skills by their
+        local unprefixed names (for example `requesting-code-review`,
+        `test-driven-development`, `executing-plans`).
       - Avoid unrelated stylistic rewrites.
     mode: semantic-rebase
     allowed_paths:

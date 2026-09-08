@@ -11,7 +11,7 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
-**Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (Claude Code, Codex CLI, Codex App, and Copilot CLI all qualify). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
+**Note:** This workflow is much more effective with subagents (Claude Code, Codex CLI, Codex App, and Copilot CLI all qualify). If subagents are available, use subagent-driven-development instead of this skill.
 
 **Where plans live:**
 - Read tasks and constraints from the host agent's active built-in plan.
@@ -85,8 +85,3 @@ After all tasks complete and verified:
 - Report after each batch and wait for feedback
 - Stop when blocked, don't guess
 - Never start implementation on main/master branch without explicit user consent
-
-## Integration
-
-**Required workflow skills:**
-- **superpowers:writing-plans** - Populates the active built-in plan (or chat plan) this skill executes

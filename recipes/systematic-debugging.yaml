@@ -13,6 +13,8 @@ transforms:
       - Remove instructions and references that invoke or recommend
         `superpowers:verification-before-completion`.
       - Do not replace it with another external skill dependency.
+      - Never mention `superpowers:*`. Refer to sibling skills by their
+        local unprefixed names (for example `test-driven-development`).
       - Preserve this skill's own Phase 4 testing and fix-verification steps.
       - Preserve all unrelated debugging guidance, resources, and wording.
       - Avoid stylistic rewrites.

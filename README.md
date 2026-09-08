@@ -24,7 +24,7 @@ Target particular harnesses or install only one skill:
 
 ```sh
 npx skills add redox/skillbrew --agent cursor --agent codex --agent claude-code
-npx skills add redox/skillbrew --skill brainstorming
+npx skills add redox/skillbrew --skill writing-plans
 ```
 
 The installer supports Cursor, Codex, Claude Code, OpenCode, Pi, Antigravity, Kimi, GitHub Copilot, and many other Agent Skills-compatible tools. These are external installation commands; they consume Skillbrew's generated output and do not require Bun.
@@ -89,7 +89,7 @@ bun run start update [name]
 Update one skill:
 
 ```sh
-bun run start update brainstorming
+bun run start update writing-plans
 ```
 
 Update the entire collection:
@@ -101,7 +101,7 @@ bun run start update
 Preview an update without writing files:
 
 ```sh
-bun run start update brainstorming --dry-run
+bun run start update writing-plans --dry-run
 ```
 
 An update resolves the recipe's `update_ref`, validates the generated skill, writes the new output and provenance data, and advances the pinned `ref`. Skills that are already current are skipped without invoking a model.

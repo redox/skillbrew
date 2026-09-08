@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "Skillbrew",
     "shortDescription": "Curated engineering workflows for coding agents",
-    "longDescription": "Use Skillbrew for brainstorming, planning, implementation, debugging, CI repair, code review, and code-quality workflows.",
+    "longDescription": "Use Skillbrew for planning, implementation, debugging, CI repair, code review, and code-quality workflows.",
     "developerName": "redox",
     "category": "Developer Tools",
     "capabilities": [

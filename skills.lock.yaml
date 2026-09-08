@@ -9,17 +9,6 @@ skills:
     license: MIT
     output_sha256: fdce1b51e21370360659931bb5c9f7277ebaa531683939887af2f9646545f875
     generated_at: 2026-07-19T09:02:31.765Z
-  brainstorming:
-    source_repository: https://github.com/obra/superpowers.git
-    source_path: skills/brainstorming
-    source_ref: d884ae04edebef577e82ff7c4e143debd0bbec99
-    source_tree_sha256: 25249399f2cd5f81631986f9ccb31b0b14e1fc568b954f0b98f3e7d08529da05
-    license: MIT
-    prompt_sha256: e91f6c713182395a1c47701d541cf028ca1f4e402664194b08280be7079ac967
-    transformer: cursor-sdk-1.0.23/composer-2.5
-    previous_output_sha256: 73b58c6e4e4f54a02dd5d72741f332577badf4946cfb6cd0748029d59fd43445
-    output_sha256: 73b58c6e4e4f54a02dd5d72741f332577badf4946cfb6cd0748029d59fd43445
-    generated_at: 2026-07-19T10:09:40.854Z
   code-simplifier:
     source_repository: https://github.com/anthropics/claude-plugins-official.git
     source_path: plugins/code-simplifier/agents/code-simplifier.md

@@ -85,7 +85,7 @@ digraph process {
 ## Plan Source
 
 This skill executes the host agent's **active built-in plan** — the plan
-already loaded in your session (from superpowers:writing-plans or equivalent).
+already loaded in your session.
 Read it once at the start. Do not create, save, or commit plan or spec Markdown
 files. For each task dispatch, paste that task's full text inline — do not
 write task briefs or other planning handoff files to disk.
@@ -274,7 +274,7 @@ a ledger file, not only in todos.
 
 - [implementer-prompt.md](implementer-prompt.md) - Dispatch implementer subagent
 - [task-reviewer-prompt.md](task-reviewer-prompt.md) - Dispatch task reviewer subagent (spec compliance + code quality)
-- Final whole-branch review: use superpowers:requesting-code-review's [code-reviewer.md](../requesting-code-review/code-reviewer.md)
+- Final whole-branch review: use requesting-code-review's [code-reviewer.md](../requesting-code-review/code-reviewer.md)
 
 ## Example Workflow
 
@@ -419,13 +419,11 @@ happens next.
 
 ## Integration
 
-**Required workflow skills:**
-- **superpowers:writing-plans** - Creates or refines the plan this skill
-  executes (may live as the active built-in plan, not necessarily a file)
-- **superpowers:requesting-code-review** - Code review template for the final whole-branch review
+**Related skills:**
+- **requesting-code-review** - Code review template for the final whole-branch review
 
 **Subagents should use:**
-- **superpowers:test-driven-development** - Subagents follow TDD for each task
+- **test-driven-development** - Subagents follow TDD for each task
 
 **Alternative workflow:**
-- **superpowers:executing-plans** - Use for parallel session instead of same-session execution
+- **executing-plans** - Use for parallel session instead of same-session execution
